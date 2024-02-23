@@ -18,7 +18,7 @@ class _SettingsTabState extends State<SettingsTab> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<AppConfigProvider>(context);
-    return Scaffold(
+    return Scaffold( backgroundColor: provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.whiteColor,
       body: Container(
         margin: EdgeInsets.all(15),
         child: Column(

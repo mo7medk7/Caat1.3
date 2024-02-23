@@ -52,6 +52,8 @@ dev_dependencies:
   cloud_firestore: ^4.9.2
   firebase_core: ^2.16.0
   firebase_auth: ^4.10.0
+# add this line to your dependencies
+  fluttertoast: ^8.2.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

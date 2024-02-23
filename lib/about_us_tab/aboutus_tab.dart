@@ -10,7 +10,7 @@ class AboutUsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     var provider = Provider.of<AppConfigProvider>(context);
     return Scaffold(
-
+      backgroundColor: provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.whiteColor,
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(

@@ -17,6 +17,7 @@ class _HomeTabState extends State<HomeTab> {
   Widget build(BuildContext context) {
     var provider = Provider.of<AppConfigProvider>(context);
     return Scaffold(
+      backgroundColor: provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.primaryLightColor ,
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
