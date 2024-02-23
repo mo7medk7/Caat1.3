@@ -9,7 +9,7 @@ class ContactUsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) { var provider = Provider.of<AppConfigProvider>(context);
     return Scaffold(
-      backgroundColor:  provider.isDarkMode()? MyTheme.primaryDarkColor: MyTheme.whiteColor,
+      backgroundColor:  provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.whiteColor,
       body: ContactUs(
         dividerColor: provider.isDarkMode()? MyTheme.whiteColor:MyTheme.greyColor,
         logo: AssetImage('assets/images/icon.png'),

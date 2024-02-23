@@ -8,13 +8,16 @@ class MyTheme {
   static Color whiteColor = Color(0xffFFFFFF);
   static Color primaryDarkColor = Color(0xff383838);
   static Color greyColor = Color(0xff707070);
-  static Color custom_green = Color(0xff18DAA3);
+  static Color greenLight =Color(0xff61E757);
   static Color backgroundColors = Colors.grey.shade100;
   static Color redColor = Color(0xFFFE4A49);
-  static Color blueTask = Color(0xffBAE2F3);
+  static Color blueTask = Color(0xff8AAFBF);
   static Color yelloTask = Color(0xffffff00);
   static Color blueColor = Color(0xff3498DB);
   static Color blackColor = Color(0xff383838);
+  static Color blue2Color = Color(0xff8AAFBF);
+  static Color blueDarkColor = Color(0xff192940);
+  static Color blue3Color = Color(0xff22345A);
 
 
   static ThemeData lightTheme = ThemeData(
@@ -45,7 +48,7 @@ class MyTheme {
         TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: primaryDarkColor),
   ));
   static ThemeData darkTheme = ThemeData(
-      primaryColor: primaryDarkColor,
+      primaryColor: blueDarkColor,
       scaffoldBackgroundColor: primaryDarkColor,
       appBarTheme: AppBarTheme(
         backgroundColor: primaryLightColor,
@@ -69,7 +72,7 @@ class MyTheme {
         titleLarge: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.bold,
-          color: primaryDarkColor,
+          color: blueDarkColor,
         ),
         titleMedium: TextStyle(
           fontSize: 18,

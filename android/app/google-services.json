@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "977743598769",
+    "project_id": "caat-project-todo-part",
+    "storage_bucket": "caat-project-todo-part.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:977743598769:android:685429b91f0fa3861cbe90",
+        "android_client_info": {
+          "package_name": "com.example.Caat1.v3_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB66YuBQ9OWUdCsa_GvbGf_lLExg3wpKNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

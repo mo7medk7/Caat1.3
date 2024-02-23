@@ -13,7 +13,7 @@ class GetStartedScreen extends StatelessWidget {
   Widget build(BuildContext context) {    var provider = Provider.of<AppConfigProvider>(context);
 
   return Scaffold(
-        backgroundColor: provider.isDarkMode()? MyTheme.primaryDarkColor: MyTheme.primaryLightColor,
+        backgroundColor: provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.primaryLightColor,
         body: Stack(children: [
           Padding(
             padding: const EdgeInsets.all(120),
@@ -24,7 +24,7 @@ class GetStartedScreen extends StatelessWidget {
             child: Image.asset('assets/images/audithubicon.png'),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 350),
+            padding: const EdgeInsets.only(top: 350, left:35),
             child: Text("""       this CAAT aims to make audits more 
          efficient, accurate, and financially 
               accessible for companies.""",

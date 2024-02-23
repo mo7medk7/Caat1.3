@@ -26,7 +26,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
   @override
   Widget build(BuildContext context) {var provider = Provider.of<AppConfigProvider>(context);
     return Scaffold(
-        backgroundColor: provider.isDarkMode()? MyTheme.primaryDarkColor: MyTheme.whiteColor,
+        backgroundColor: provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.whiteColor,
         body: SingleChildScrollView(
           child: Column(children: [
             Padding(
