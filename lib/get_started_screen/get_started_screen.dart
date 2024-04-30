@@ -37,8 +37,6 @@ class GetStartedScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     fixedSize:
                         Size(MediaQuery.of(context).size.width * 0.8, 50),
-                    primary: MyTheme.yelloColor,
-                    onPrimary: MyTheme.whiteColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     )),

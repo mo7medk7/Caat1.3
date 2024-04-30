@@ -5,17 +5,23 @@ import 'package:caatsec/todo_tab/task_list/task_details_screen.dart';
 import 'package:caatsec/todo_tab/to_do_tab.dart';
 import 'package:caatsec/signup/sign_up.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:caatsec/providers/app_config_provider.dart';
+import 'chat_ai/consts.dart';
 import 'get_started_screen/get_started_screen.dart';
 import 'home_tab/home_screen.dart';
 import 'login/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
+  Gemini.init(
+    apiKey: GEMINI_API_KEY,
+  );
+  
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 

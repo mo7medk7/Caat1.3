@@ -1,3 +1,4 @@
+import 'package:caatsec/chat_ai/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -67,7 +68,14 @@ class _HomeTabState extends State<HomeTab> {
                 crossAxisSpacing: 40,
                 mainAxisSpacing: 30,
                 children: [
-                  customitemDashBoard( title: 'Videos', iconData:  CupertinoIcons.play_rectangle, background:  Colors.deepOrange,
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return const ChatPage();
+                      }));
+                    },
+                    child: customitemDashBoard( title: 'Ai Chat', iconData:  CupertinoIcons.play_rectangle, background:  Colors.deepOrange,
+                    ),
                   ),
                   customitemDashBoard( title: 'Analytics', iconData: CupertinoIcons.graph_circle, background:  Colors.green,),
                   customitemDashBoard( title: 'Audience', iconData:  CupertinoIcons.person_2, background: Colors.purple,),
