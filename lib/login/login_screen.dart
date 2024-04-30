@@ -1,4 +1,5 @@
 import 'package:caatsec/signup/sign_up.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,9 +19,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   var formKey = GlobalKey<FormState>();
 
-  var emailController = TextEditingController(text: 'caat@gmail.com');
+  var emailController = TextEditingController(text: 'mkm20200@gmail.com');
 
-  var passwordController = TextEditingController(text: '123456');
+  var passwordController = TextEditingController(text: 'mkm123456789');
 
   @override
   Widget build(BuildContext context) {
@@ -100,8 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: ElevatedButton.styleFrom(
                               fixedSize: Size(
                                   MediaQuery.of(context).size.width * 0.8, 50),
-                              primary: MyTheme.yelloColor,
-                              onPrimary: MyTheme.whiteColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               )),
@@ -165,9 +164,24 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
   }
 
-  void login() {
+  Future<void> login() async {
     if (formKey.currentState?.validate() == true) {
-      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+      try {
+        final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: emailController.text,
+            password: passwordController.text
+        );
+        Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          print('Wrong password provided for that user.');
+        }
+      }catch(e){
+        print(e.toString());
+      }
+
     }
   }
 }

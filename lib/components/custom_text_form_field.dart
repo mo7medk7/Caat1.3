@@ -2,7 +2,6 @@ import 'package:caatsec/my_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/app_config_provider.dart';
 
 typedef Validator = String? Function(String?);

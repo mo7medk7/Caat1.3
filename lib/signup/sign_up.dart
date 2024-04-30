@@ -132,9 +132,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                         style: ElevatedButton.styleFrom(
                             fixedSize:
                                 Size(MediaQuery.of(context).size.width * 0.8, 50),
-                            primary: MyTheme.yelloColor,
-                            onPrimary: MyTheme.whiteColor,
-                            shape: RoundedRectangleBorder(
+                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             )),
                         onPressed: () {
