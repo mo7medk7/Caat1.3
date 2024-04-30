@@ -1,4 +1,5 @@
 import 'package:caatsec/signup/sign_up.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -171,6 +172,11 @@ class _LoginScreenState extends State<LoginScreen> {
             email: emailController.text,
             password: passwordController.text
         );
+
+        // After successful login, store user information in Firestore
+        await storeUserData(credential.user!);
+
+        // Navigate to the home screen
         Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
@@ -178,10 +184,32 @@ class _LoginScreenState extends State<LoginScreen> {
         } else if (e.code == 'wrong-password') {
           print('Wrong password provided for that user.');
         }
-      }catch(e){
+      } catch(e) {
         print(e.toString());
       }
+    }
+  }
 
+  Future<void> storeUserData(User user) async {
+    try {
+      // Get a reference to the Firestore collection
+      CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+      // Check if the email already exists in Firestore
+      QuerySnapshot querySnapshot = await users.where('email', isEqualTo: user.email).get();
+
+      // If the email does not exist, add the user data to Firestore
+      if (querySnapshot.docs.isEmpty) {
+        await users.doc(user.uid).set({
+          'uid': user.uid,
+          'email': user.email,
+          // Add additional user data as needed
+        });
+      } else {
+        print('Email ${user.email} already exists in Firestore.');
+      }
+    } catch (e) {
+      print('Error storing user data: $e');
     }
   }
 }
