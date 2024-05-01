@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -24,9 +25,17 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
   String title = '';
   String description = '';
   String emUsername = '';
+  List<String> emails = []; // Store fetched emails
+  String? selectedEmail; // Store selected email
 
   late AppConfigProvider provider;
   late ListProvider Listprovider;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserEmails(); // Fetch emails from Firestore when the widget initializes
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,21 +115,26 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                         ),
                       ),
                     ),
+
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(style:  TextStyle(color:  provider.isDarkMode()?MyTheme.whiteColor:MyTheme.greyColor),
-                        onChanged: (text) {
-                          emUsername = text;
+                      child: DropdownButtonFormField<String>(
+                        value: selectedEmail,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedEmail = newValue;
+                          });
                         },
-                        validator: (text) {
-                          if (text == null || text.isEmpty) {
-                            return 'please enter employee username';
-                          }
-                          return null;
-                        },
+                        items: emails.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
                         decoration: InputDecoration(
-                            hintText: ('enter employee username'),
-                            hintStyle: Theme.of(context).textTheme.titleMedium),
+                          hintText: 'Select an email',
+                          hintStyle: Theme.of(context).textTheme.titleMedium,
+                        ),
                       ),
                     ),
                     ElevatedButton(
@@ -164,7 +178,8 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
           dateTime: selectedDate,
           title: title,
           description: description,
-          emUsername: emUsername);
+          employeeEmail: selectedEmail,
+      );
       FirebaseUtils.addTaskToFirebase(task).timeout(Duration(milliseconds: 500),
           onTimeout: () {
         print('todo added successfully');
@@ -182,4 +197,19 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
       toastLength: Toast.LENGTH_SHORT,
       backgroundColor: MyTheme.yelloColor,
       textColor: MyTheme.blackColor);
+
+
+  Future<void> fetchUserEmails() async {
+    try {
+      // Query Firestore collection 'users' to fetch user emails
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('users').get();
+      List<String> userEmails = querySnapshot.docs.map((doc) => doc['email'] as String).toList();
+
+      setState(() {
+        emails = userEmails;
+      });
+    } catch (e) {
+      print("Error fetching user emails: $e");
+    }
+  }
 }

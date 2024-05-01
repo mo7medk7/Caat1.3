@@ -8,6 +8,7 @@ class ListProvider extends ChangeNotifier {
 
   DateTime selectedDate = DateTime.now();
 
+
   void getAllTasksFromFireStore() async {
 
       QuerySnapshot<Task> querySnapshot= await  FirebaseUtils.getTasksCollection().get();
@@ -19,8 +20,7 @@ class ListProvider extends ChangeNotifier {
     taskList = taskList.where((task) {
       if (task.dateTime?.day == selectedDate.day &&
           task.dateTime?.month == selectedDate.month &&
-          task.dateTime?.year == selectedDate.year &&
-          task.emUsername=='fatma') {
+          task.dateTime?.year == selectedDate.year) {
         return true;
       }
       return false;

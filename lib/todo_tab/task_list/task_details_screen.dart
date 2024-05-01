@@ -36,7 +36,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       titleController.text = task?.title??'';
       descriptionController.text = task?.description??'';
       selectedDate = task!.dateTime!;
-      emUsenameController.text=task?.emUsername??'';
     });
   }
 
@@ -110,28 +109,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                       Theme.of(context).textTheme.titleMedium),
                               maxLines: 4,
                             ),
-                          ),  Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              controller: emUsenameController,
-                              validator: (text) {
-                                if (text == null || text.isEmpty) {
-                                  return 'please enter employee username';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                  hintText: ('enter employee username'),
-                                  hintStyle:
-                                  Theme.of(context).textTheme.titleMedium),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              AppLocalizations.of(context)!.selectdate,
-                              style:provider.isDarkMode()?Theme.of(context).textTheme.titleSmall!.copyWith(color: MyTheme.blackColor): Theme.of(context).textTheme.titleSmall,
-                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -202,7 +179,6 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
       task?.title = titleController.text;
       task?.description = descriptionController.text;
       task?.dateTime = selectedDate;
-      task?.emUsername=emUsenameController.text;
       FirebaseUtils.editTask(task!).then((value) {
         Navigator.pop(context);
         DialogUtils.showMessage(
