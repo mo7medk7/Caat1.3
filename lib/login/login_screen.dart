@@ -9,6 +9,7 @@ import '../components/custom_text_form_field.dart';
 import '../home_tab/home_screen.dart';
 import '../my_theme.dart';
 import '../providers/app_config_provider.dart';
+import '../providers/list_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = "login";
@@ -24,8 +25,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   var passwordController = TextEditingController(text: 'mkm123456789');
 
+
+
   @override
   Widget build(BuildContext context) {
+
     var provider = Provider.of<AppConfigProvider>(context);
     return Scaffold(
         backgroundColor: provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.whiteColor,
@@ -44,12 +48,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.only(top: 20),
                 child: Text(' Enter Your Details below',
                     style:provider.isDarkMode()?Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: MyTheme.whiteColor,
-                        fontWeight: FontWeight.bold,):
-                        Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: MyTheme.greyColor,
-                          fontWeight: FontWeight.bold,
-                        )),
+                      color: MyTheme.whiteColor,
+                      fontWeight: FontWeight.bold,):
+                    Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: MyTheme.greyColor,
+                      fontWeight: FontWeight.bold,
+                    )),
               ),
               Padding(
                 padding: EdgeInsets.only(top: 100),
@@ -57,107 +61,107 @@ class _LoginScreenState extends State<LoginScreen> {
                   key: formKey,
                   child: SingleChildScrollView(
                       child: Column(
-                    children: [
-                      CustomTextFormField(
-                        textIcon: CupertinoIcons.envelope_fill,
-                        controller: emailController,
-                        hintText: 'Email Address',
-                        labelText: 'Email Address',
-                        myValidator: (text) {
-                          if (text == null || text.trim().isEmpty) {
-                            return "please enter email address";
-                          }
-                          bool emailValid = RegExp(
+                        children: [
+                          CustomTextFormField(
+                            textIcon: CupertinoIcons.envelope_fill,
+                            controller: emailController,
+                            hintText: 'Email Address',
+                            labelText: 'Email Address',
+                            myValidator: (text) {
+                              if (text == null || text.trim().isEmpty) {
+                                return "please enter email address";
+                              }
+                              bool emailValid = RegExp(
                                   r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              .hasMatch(text);
-                          if (!emailValid) {
-                            return "please enter valid email address";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                      ),
-                      CustomTextFormField(
-                        textIcon: CupertinoIcons.padlock_solid,
-                        controller: passwordController,
-                        hintText: 'password',
-                        labelText: 'password',
-                        obscureText: true,
-                        myValidator: (text) {
-                          if (text == null || text.trim().isEmpty) {
-                            return "please enter password";
-                          }
-                          if (text.length < 6) {
-                            return "password should be at least 6 chars";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.08,
-                      ),
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              fixedSize: Size(
-                                  MediaQuery.of(context).size.width * 0.8, 50),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              )),
-                          onPressed: () {
-                            login();
-                          },
-                          child: Text('LOG IN',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(
+                                  .hasMatch(text);
+                              if (!emailValid) {
+                                return "please enter valid email address";
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                          ),
+                          CustomTextFormField(
+                            textIcon: CupertinoIcons.padlock_solid,
+                            controller: passwordController,
+                            hintText: 'password',
+                            labelText: 'password',
+                            obscureText: true,
+                            myValidator: (text) {
+                              if (text == null || text.trim().isEmpty) {
+                                return "please enter password";
+                              }
+                              if (text.length < 6) {
+                                return "password should be at least 6 chars";
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.08,
+                          ),
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  fixedSize: Size(
+                                      MediaQuery.of(context).size.width * 0.8, 50),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  )),
+                              onPressed: () {
+                                login();
+                              },
+                              child: Text('LOG IN',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(
                                       color: MyTheme.whiteColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20))),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.08,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(' Don’t Have Account?',
-                              style: provider.isDarkMode()? Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(
-                                  color: MyTheme.whiteColor,
-                                  fontWeight: FontWeight.bold,)
-                                  : Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(
-                                    color: MyTheme.greyColor,
-                                    fontWeight: FontWeight.bold,
-                              )),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.of(context)
-                                    .pushNamed(SignUPScreen.routeName);
-                              },
-                              child: Text(' Sign Up',
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.08,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(' Don’t Have Account?',
                                   style: provider.isDarkMode()? Theme.of(context)
                                       .textTheme
                                       .titleMedium!
                                       .copyWith(
-                                      color: MyTheme.whiteColor,
-                                      fontWeight: FontWeight.bold,) : Theme.of(context)
+                                    color: MyTheme.whiteColor,
+                                    fontWeight: FontWeight.bold,)
+                                      : Theme.of(context)
                                       .textTheme
                                       .titleMedium!
                                       .copyWith(
+                                    color: MyTheme.greyColor,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushNamed(SignUPScreen.routeName);
+                                  },
+                                  child: Text(' Sign Up',
+                                      style: provider.isDarkMode()? Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                        color: MyTheme.whiteColor,
+                                        fontWeight: FontWeight.bold,) : Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
                                         color: MyTheme.primaryDarkColor,
                                         fontWeight: FontWeight.bold,
                                       )))
+                            ],
+                          )
                         ],
-                      )
-                    ],
-                  )),
+                      )),
                 ),
               )
             ],
