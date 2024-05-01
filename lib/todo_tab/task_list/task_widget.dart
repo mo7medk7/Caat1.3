@@ -93,7 +93,6 @@ class _TaskWidgetState extends State<TaskWidget> {
                       padding: const EdgeInsets.all(8.0),
                       child:Row(children: [
                         Text(widget.task.description ?? '',
-                            style: Theme.of(context).textTheme.titleSmall),SizedBox(width: 10,), Text(widget.task.emUsername ?? '',
                             style: Theme.of(context).textTheme.titleSmall),
                       ],)
                     ),
