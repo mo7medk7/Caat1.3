@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../analysis/analysis_page.dart';
 import '../components/custom_dashboard_item.dart';
 import '../my_theme.dart';
 import '../providers/app_config_provider.dart';
@@ -77,7 +78,13 @@ class _HomeTabState extends State<HomeTab> {
                     child: customitemDashBoard( title: 'Ai Chat', iconData:  CupertinoIcons.play_rectangle, background:  Colors.deepOrange,
                     ),
                   ),
-                  customitemDashBoard( title: 'Analytics', iconData: CupertinoIcons.graph_circle, background:  Colors.green,),
+                  InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return AnalysisPage();
+                        }));
+                      },
+                      child: customitemDashBoard( title: 'Analytics', iconData: CupertinoIcons.graph_circle, background:  Colors.green,)),
                   customitemDashBoard( title: 'Audience', iconData:  CupertinoIcons.person_2, background: Colors.purple,),
                   customitemDashBoard(title: 'Comments', iconData: CupertinoIcons.chat_bubble_2, background: Colors.brown,),
                   customitemDashBoard( title: 'Revenue', iconData:  CupertinoIcons.money_dollar_circle, background:  Colors.indigo,),
