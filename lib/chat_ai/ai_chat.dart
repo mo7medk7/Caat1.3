@@ -6,14 +6,14 @@ import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:image_picker/image_picker.dart';
 
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+class ChatAiPage extends StatefulWidget {
+  const ChatAiPage({super.key});
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<ChatAiPage> createState() => _ChatAiPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatAiPageState extends State<ChatAiPage> {
   final Gemini gemini = Gemini.instance;
 
   List<ChatMessage> messages = [];

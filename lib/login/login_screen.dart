@@ -103,12 +103,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: MediaQuery.of(context).size.height * 0.08,
                           ),
                           ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  fixedSize: Size(
-                                      MediaQuery.of(context).size.width * 0.8, 50),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  )),
+                            style: ElevatedButton.styleFrom(
+                              fixedSize: Size(MediaQuery.of(context).size.width * 0.8, 50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              backgroundColor: Colors.amber,
+                            ),
                               onPressed: () {
                                 login();
                               },
@@ -120,47 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: MyTheme.whiteColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20))),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.08,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(' Don’t Have Account?',
-                                  style: provider.isDarkMode()? Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .copyWith(
-                                    color: MyTheme.whiteColor,
-                                    fontWeight: FontWeight.bold,)
-                                      : Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .copyWith(
-                                    color: MyTheme.greyColor,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pushNamed(SignUPScreen.routeName);
-                                  },
-                                  child: Text(' Sign Up',
-                                      style: provider.isDarkMode()? Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                        color: MyTheme.whiteColor,
-                                        fontWeight: FontWeight.bold,) : Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                        color: MyTheme.primaryDarkColor,
-                                        fontWeight: FontWeight.bold,
-                                      )))
-                            ],
-                          )
-                        ],
+                          ],
                       )),
                 ),
               )
