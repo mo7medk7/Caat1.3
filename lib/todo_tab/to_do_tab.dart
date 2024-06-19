@@ -31,6 +31,12 @@ class _ToDoTabState extends State<ToDoTab> {
       Listprovider.getAllTasksFromFireStore();
     }
     return Scaffold(
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.whiteColor),
+          centerTitle: true,
+          title:
+          Text('Task', style: Theme.of(context).textTheme.titleLarge),
+        ),
      backgroundColor:    provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.whiteColor,
         floatingActionButton: FloatingActionButton(
           shape: StadiumBorder(
@@ -39,6 +45,7 @@ class _ToDoTabState extends State<ToDoTab> {
             AddTaskModelSheet();
           },
           child: Icon(Icons.add),
+
         ),
         body: Column(
           children: [

@@ -55,26 +55,6 @@ class HomeDrawer extends StatelessWidget {
           const SizedBox(
             height: 15,
           ),
-          InkWell(
-            onTap: () {
-              onSideMenuItem(HomeDrawer.ToDo);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: [
-                  Icon(Icons.task_outlined, color: provider.isDarkMode()?MyTheme.whiteColor:MyTheme.greyColor),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'ToDo',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  )
-                ],
-              ),
-            ),
-          ),
           const SizedBox(
             height: 15,
           ),

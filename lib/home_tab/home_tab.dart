@@ -1,10 +1,13 @@
-import 'package:caatsec/chat_ai/home_page.dart';
+import 'package:caatsec/chat_ai/ai_chat.dart';
+import 'package:caatsec/model/task.dart';
+import 'package:caatsec/todo_tab/to_do_tab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../analysis/analysis_page.dart';
 import '../components/custom_dashboard_item.dart';
+import '../group_chat/group_chat_page.dart';
 import '../my_theme.dart';
 import '../providers/app_config_provider.dart';
 
@@ -69,28 +72,47 @@ class _HomeTabState extends State<HomeTab> {
                 crossAxisSpacing: 40,
                 mainAxisSpacing: 30,
                 children: [
-                  InkWell(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        return const ChatPage();
-                      }));
-                    },
-                    child: customitemDashBoard( title: 'Ai Chat', iconData:  CupertinoIcons.play_rectangle, background:  Colors.deepOrange,
-                    ),
-                  ),
+
                   InkWell(
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context) {
                           return AnalysisPage();
                         }));
                       },
-                      child: customitemDashBoard( title: 'Analytics', iconData: CupertinoIcons.graph_circle, background:  Colors.green,)),
-                  customitemDashBoard( title: 'Audience', iconData:  CupertinoIcons.person_2, background: Colors.purple,),
-                  customitemDashBoard(title: 'Comments', iconData: CupertinoIcons.chat_bubble_2, background: Colors.brown,),
-                  customitemDashBoard( title: 'Revenue', iconData:  CupertinoIcons.money_dollar_circle, background:  Colors.indigo,),
-                  customitemDashBoard( title: 'Upload', iconData:  CupertinoIcons.add_circled, background:  Colors.teal,),
-                  customitemDashBoard( title: 'About', iconData:  CupertinoIcons.question_circle, background: Colors.blue,),
-                  customitemDashBoard( title: 'Contact', iconData:  CupertinoIcons.phone, background:  Colors.pinkAccent,),
+                      child: customitemDashBoard( title: 'Analysis', iconData: CupertinoIcons.graph_circle, background:  Colors.green,)),
+
+                  InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return ToDoTab();
+                        }));
+                      },
+                      child: customitemDashBoard( title: 'Tasks', iconData: CupertinoIcons.doc_checkmark_fill, background:  Colors.blueGrey,)),
+
+                  InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return ChatScreen();
+                        }));
+                      },
+                      child: customitemDashBoard( title: 'Room Chat', iconData: CupertinoIcons.chat_bubble_2, background:  Colors.brown,)),
+
+
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return const ChatAiPage();
+                      }));
+                    },
+                    child: customitemDashBoard( title: 'Ai Chat', iconData:  CupertinoIcons.keyboard_chevron_compact_down, background:  Colors.deepOrange,
+                    ),
+                  ),
+
+                  customitemDashBoard( title: 'About Us', iconData:  CupertinoIcons.app_badge_fill, background:  Colors.indigoAccent,
+                  ),
+
+                  customitemDashBoard( title: 'Settings', iconData:  CupertinoIcons.settings, background:  Colors.black,
+                  ),
                 ],
               ),
             ),

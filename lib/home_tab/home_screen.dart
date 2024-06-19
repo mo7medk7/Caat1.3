@@ -24,10 +24,14 @@ class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
 
   @override
-  Widget build(BuildContext context) {var provider = Provider.of<AppConfigProvider>(context);
+  Widget build(BuildContext context) {
+    var provider = Provider.of<AppConfigProvider>(context);
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.whiteColor),
+          iconTheme: IconThemeData(
+              color: provider.isDarkMode()
+                  ? MyTheme.blueDarkColor
+                  : MyTheme.whiteColor),
           centerTitle: true,
           title:
               Text('AUDITHUB', style: Theme.of(context).textTheme.titleLarge),
@@ -36,10 +40,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.pushNamed(context, LoginScreen.routeName);
                 },
-                icon: Icon(Icons.logout, color: provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.whiteColor))
+                icon: Icon(Icons.logout,
+                    color: provider.isDarkMode()
+                        ? MyTheme.blueDarkColor
+                        : MyTheme.whiteColor))
           ],
         ),
-        drawer: Drawer(backgroundColor: provider.isDarkMode()? MyTheme.primaryDarkColor: MyTheme.whiteColor,
+        drawer: Drawer(
+          backgroundColor: provider.isDarkMode()
+              ? MyTheme.primaryDarkColor
+              : MyTheme.whiteColor,
           child: HomeDrawer(
             onSideMenuItem: onSideMenuItem,
           ),
@@ -52,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? AboutUsTab()
                     : selectedMenuItem == HomeDrawer.ContactUs
                         ? ContactUsTab()
-                    :  HomeTab());
+                        : HomeTab());
   }
 
   int selectedMenuItem = HomeDrawer.home;

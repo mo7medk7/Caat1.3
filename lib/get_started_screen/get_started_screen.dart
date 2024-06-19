@@ -39,7 +39,10 @@ class GetStartedScreen extends StatelessWidget {
                         Size(MediaQuery.of(context).size.width * 0.8, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
-                    )),
+
+                    ),
+                  backgroundColor: Colors.yellow,
+                ),
                 onPressed: () {
                   Navigator.of(context)
                       .pushReplacementNamed(LoginScreen.routeName);
