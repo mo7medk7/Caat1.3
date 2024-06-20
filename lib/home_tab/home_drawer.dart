@@ -2,10 +2,11 @@ import 'package:caatsec/my_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers/app_config_provider.dart';
 
-class HomeDrawer extends StatelessWidget {
+class HomeDrawer extends StatefulWidget {
   Function onSideMenuItem;
   static const int home = 1;
   static const int ToDo = 2;
@@ -13,6 +14,33 @@ class HomeDrawer extends StatelessWidget {
   static const int AboutUs = 4;
   static const int ContactUs =5;
   HomeDrawer({required this.onSideMenuItem});
+
+  @override
+  State<HomeDrawer> createState() => _HomeDrawerState();
+}
+
+class _HomeDrawerState extends State<HomeDrawer> {
+
+  String _email = '';
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEmail();
+  }
+
+  Future<void> _loadEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _email = prefs.getString('userEmail') ?? '';
+    });
+  }
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {var provider = Provider.of<AppConfigProvider>(context);
@@ -23,8 +51,8 @@ class HomeDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               color: MyTheme.primaryLightColor,
             ),
-            accountName: Text('fatma sayed'),
-            accountEmail: Text('fatmasayed@gmail.com'),
+            accountName: Text(''),
+            accountEmail: Text('$_email'),
             currentAccountPicture: CircleAvatar(
               backgroundImage: AssetImage('assets/images/user.jpg'),
             ),
@@ -34,7 +62,7 @@ class HomeDrawer extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              onSideMenuItem(HomeDrawer.home);
+              widget.onSideMenuItem(HomeDrawer.home);
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -61,7 +89,7 @@ class HomeDrawer extends StatelessWidget {
 
           InkWell(
             onTap: () {
-              onSideMenuItem(HomeDrawer.settings);
+              widget.onSideMenuItem(HomeDrawer.settings);
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -84,7 +112,7 @@ class HomeDrawer extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              onSideMenuItem(HomeDrawer.AboutUs);
+              widget.onSideMenuItem(HomeDrawer.AboutUs);
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -108,7 +136,7 @@ class HomeDrawer extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              onSideMenuItem(HomeDrawer.ContactUs);
+              widget.onSideMenuItem(HomeDrawer.ContactUs);
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),

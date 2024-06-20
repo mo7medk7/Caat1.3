@@ -1,9 +1,11 @@
+import 'package:caatsec/components/custom_text_feild_for_password.dart';
 import 'package:caatsec/signup/sign_up.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/custom_text_form_field.dart';
 import '../home_tab/home_screen.dart';
@@ -24,6 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
   var emailController = TextEditingController(text: 'mkm20200@gmail.com');
 
   var passwordController = TextEditingController(text: 'mkm123456789');
+
+  bool _isHidden = true;
 
 
 
@@ -83,33 +87,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.05,
                           ),
-                          CustomTextFormField(
-                            textIcon: CupertinoIcons.padlock_solid,
-                            controller: passwordController,
-                            hintText: 'password',
-                            labelText: 'password',
-                            obscureText: true,
-                            myValidator: (text) {
-                              if (text == null || text.trim().isEmpty) {
-                                return "please enter password";
-                              }
-                              if (text.length < 6) {
-                                return "password should be at least 6 chars";
-                              }
-                              return null;
-                            },
-                          ),
+
+
+
+                          CustomPasswordField(controller: passwordController),
+
+
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.08,
                           ),
                           ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              fixedSize: Size(MediaQuery.of(context).size.width * 0.8, 50),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: Size(MediaQuery.of(context).size.width * 0.8, 50),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                backgroundColor: Colors.amber,
                               ),
-                              backgroundColor: Colors.amber,
-                            ),
                               onPressed: () {
                                 login();
                               },
@@ -121,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: MyTheme.whiteColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20))),
-                          ],
+                        ],
                       )),
                 ),
               )
@@ -138,8 +132,9 @@ class _LoginScreenState extends State<LoginScreen> {
             password: passwordController.text
         );
 
-        // After successful login, store user information in Firestore
-        await storeUserData(credential.user!);
+
+        await saveEmail(emailController.text);
+
 
         // Navigate to the home screen
         Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
@@ -155,26 +150,39 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> storeUserData(User user) async {
-    try {
-      // Get a reference to the Firestore collection
-      CollectionReference users = FirebaseFirestore.instance.collection('users');
+  // Future<void> storeUserData(User user) async {
+  //   try {
+  //     // Get a reference to the Firestore collection
+  //     CollectionReference users = FirebaseFirestore.instance.collection('users');
+  //
+  //     // Check if the email already exists in Firestore
+  //     QuerySnapshot querySnapshot = await users.where('email', isEqualTo: user.email).get();
+  //
+  //     // If the email does not exist, add the user data to Firestore
+  //     if (querySnapshot.docs.isEmpty) {
+  //       await users.doc(user.uid).set({
+  //         'uid': user.uid,
+  //         'email': user.email,
+  //         // Add additional user data as needed
+  //       });
+  //     } else {
+  //       print('Email ${user.email} already exists in Firestore.');
+  //     }
+  //   } catch (e) {
+  //     print('Error storing user data: $e');
+  //   }
+  // }
 
-      // Check if the email already exists in Firestore
-      QuerySnapshot querySnapshot = await users.where('email', isEqualTo: user.email).get();
-
-      // If the email does not exist, add the user data to Firestore
-      if (querySnapshot.docs.isEmpty) {
-        await users.doc(user.uid).set({
-          'uid': user.uid,
-          'email': user.email,
-          // Add additional user data as needed
-        });
-      } else {
-        print('Email ${user.email} already exists in Firestore.');
-      }
-    } catch (e) {
-      print('Error storing user data: $e');
-    }
+  Future<void> saveEmail(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userEmail', email);
   }
+
+  void _togglePasswordView() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
+  }
+
+
 }
