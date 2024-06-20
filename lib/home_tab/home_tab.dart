@@ -4,6 +4,7 @@ import 'package:caatsec/todo_tab/to_do_tab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../analysis/analysis_page.dart';
 import '../components/custom_dashboard_item.dart';
@@ -18,6 +19,28 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
+
+String _user = '';
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+
+  Future<void> _loadUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String user = prefs.getString('userEmail') ?? '';
+    setState(() {
+      _user = user.split('@')[0];
+    });
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<AppConfigProvider>(context);
@@ -38,7 +61,7 @@ class _HomeTabState extends State<HomeTab> {
                 const SizedBox(height: 50),
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 30),
-                  title: Text('Hello fatma!',
+                  title: Text('Hello $_user!',
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall
@@ -122,6 +145,7 @@ class _HomeTabState extends State<HomeTab> {
       ),
     );
   }
+
 
 }
 
