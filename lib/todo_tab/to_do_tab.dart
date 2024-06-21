@@ -8,12 +8,12 @@ import '../firebase_utils.dart';
 import '../model/task.dart';
 import '../my_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../providers/app_config_provider.dart';
 import '../providers/list_provider.dart';
 
 class ToDoTab extends StatefulWidget {
-
   static const String routeName = "ToDoTab";
 
   @override
@@ -21,72 +21,105 @@ class ToDoTab extends StatefulWidget {
 }
 
 class _ToDoTabState extends State<ToDoTab> {
+  bool _show = false;
+
+  @override
+  void initState() {
+    super.initState();
+    userAdminAccess();
+  }
+
+  void showFloatingButton() {
+    setState(() {
+      _show = true;
+    });
+  }
+
+  void hideFloatingButton() {
+    setState(() {
+      _show = false;
+    });
+  }
+
+  void userAdminAccess() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+
+      if (userDoc.exists && userDoc['isAdmin'] == true) {
+        showFloatingButton();
+      } else {
+        hideFloatingButton();
+      }
+    } else {
+      hideFloatingButton();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
     var provider = Provider.of<AppConfigProvider>(context);
-    var Listprovider = Provider.of<ListProvider>(context);
-    if (Listprovider.taskList.isEmpty){
-      Listprovider.getAllTasksFromFireStore();
+    var listProvider = Provider.of<ListProvider>(context);
+    if (listProvider.taskList.isEmpty) {
+      listProvider.getAllTasksFromFireStore();
     }
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.whiteColor),
-          centerTitle: true,
-          title:
-          Text('Task', style: Theme.of(context).textTheme.titleLarge),
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: provider.isDarkMode() ? MyTheme.blueDarkColor : MyTheme.whiteColor,
         ),
-     backgroundColor:    provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.whiteColor,
-        floatingActionButton: FloatingActionButton(
-          shape: StadiumBorder(
-              side: BorderSide(color: MyTheme.whiteColor, width: 5)),
-          onPressed: () {
-            AddTaskModelSheet();
-          },
-          child: Icon(Icons.add),
-
-        ),
-        body: Column(
-          children: [
-            CalendarTimeline(
-              initialDate:  Listprovider.selectedDate,
-              firstDate: DateTime.now().subtract(Duration(days: 365)),
-              lastDate: DateTime.now().add(Duration(days: 365)),
-              onDateSelected: (date) {
-                Listprovider.setNewSelectedDate(date);
+        centerTitle: true,
+        title: Text('Task', style: Theme.of(context).textTheme.titleLarge),
+      ),
+      backgroundColor: provider.isDarkMode() ? MyTheme.blueDarkColor : MyTheme.whiteColor,
+      floatingActionButton: _show
+          ? FloatingActionButton(
+        shape: StadiumBorder(side: BorderSide(color: MyTheme.whiteColor, width: 5)),
+        onPressed: () {
+          AddTaskModelSheet();
+        },
+        child: Icon(Icons.add),
+      )
+          : null,
+      body: Column(
+        children: [
+          CalendarTimeline(
+            initialDate: listProvider.selectedDate,
+            firstDate: DateTime.now().subtract(Duration(days: 365)),
+            lastDate: DateTime.now().add(Duration(days: 365)),
+            onDateSelected: (date) {
+              listProvider.setNewSelectedDate(date);
+            },
+            leftMargin: 20,
+            monthColor: provider.isDarkMode() ? MyTheme.whiteColor : MyTheme.blackColor,
+            dayColor: provider.isDarkMode() ? MyTheme.whiteColor : MyTheme.blackColor,
+            activeDayColor: MyTheme.whiteColor,
+            activeBackgroundDayColor: MyTheme.primaryLightColor,
+            dotsColor: MyTheme.whiteColor,
+            selectableDayPredicate: (date) => true,
+            locale: 'en_ISO',
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                return TaskWidget(task: listProvider.taskList[index]);
               },
-              leftMargin: 20,
-              monthColor: provider.isDarkMode()
-                  ? MyTheme.whiteColor
-                  : MyTheme.blackColor,
-              dayColor: provider.isDarkMode()
-                  ? MyTheme.whiteColor
-                  : MyTheme.blackColor,
-              activeDayColor: MyTheme.whiteColor,
-              activeBackgroundDayColor: MyTheme.primaryLightColor,
-              dotsColor: MyTheme.whiteColor,
-              selectableDayPredicate: (date) => true,
-              locale: 'en_ISO',
+              itemCount: listProvider.taskList.length,
             ),
-            Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return TaskWidget(
-                    task: Listprovider.taskList[index],
-                  );
-                },
-                itemCount:Listprovider.taskList.length,
-              ),
-            ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   void AddTaskModelSheet() {
     showModalBottomSheet(
-        context: context, builder: (context) => AddTaskBottomSheet());
+      context: context,
+      builder: (context) => AddTaskBottomSheet(),
+    );
   }
-
 }
-
