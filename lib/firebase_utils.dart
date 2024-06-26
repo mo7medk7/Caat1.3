@@ -28,5 +28,34 @@ class FirebaseUtils {
   static Future<void> editTask(Task task) {
     return getTasksCollection().doc(task.id).update(task.toFireStore());
   }
+/////////////////////////////////////////////////////
+
+  static Future<MyUser?> readUserFromFireStore(String uId) async {
+    var querySnapshot = await getUsersCollection().doc(uId).get();
+    return querySnapshot.data();
+  }
+
+
+
+
+
+////////////////////////////////////////////////////
+  static CollectionReference<MyUser> getUsersCollection() {
+    return FirebaseFirestore.instance
+        .collection(MyUser.collectionName)
+        .withConverter<MyUser>(
+      fromFirestore: ((snapshot, options) =>
+          MyUser.fromFireStore(snapshot.data())),
+      toFirestore: (user, options) => user.toFireStore(),
+    );
+  }
+
+/////////////////////////////////////////////////////
+
+
+
+
+
+
 
 }

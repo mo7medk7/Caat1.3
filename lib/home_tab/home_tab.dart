@@ -1,16 +1,14 @@
 import 'package:caatsec/chat_ai/ai_chat.dart';
-import 'package:caatsec/model/task.dart';
 import 'package:caatsec/todo_tab/to_do_tab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../analysis/analysis_page.dart';
 import '../components/custom_dashboard_item.dart';
 import '../group_chat/group_chat_page.dart';
 import '../my_theme.dart';
 import '../providers/app_config_provider.dart';
+import '../providers/auth_provider.dart';
 
 @pragma('vm:entry-point')
 class HomeTab extends StatefulWidget {
@@ -20,29 +18,11 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
 
-String _user = '';
-
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUser();
-  }
-
-
-  Future<void> _loadUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String user = prefs.getString('userEmail') ?? '';
-    setState(() {
-      _user = user.split('@')[0];
-    });
-  }
-
-
-
-
   @override
   Widget build(BuildContext context) {
+    //////
+    var authprovider = Provider.of<AuthhProvider>(context);
+    ///////////////
     var provider = Provider.of<AppConfigProvider>(context);
     return Scaffold(
       backgroundColor: provider.isDarkMode()? MyTheme.blueDarkColor: MyTheme.primaryLightColor ,
@@ -60,8 +40,8 @@ String _user = '';
               children: [
                 const SizedBox(height: 50),
                 ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 30),
-                  title: Text('Hello $_user!',
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 30),////////////////////////
+                  title: Text('Hello ${authprovider.currentUser!.email?.split('@')[0]}!',
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall

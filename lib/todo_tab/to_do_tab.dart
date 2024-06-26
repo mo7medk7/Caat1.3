@@ -4,13 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
-import '../firebase_utils.dart';
-import '../model/task.dart';
+
 import '../my_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../providers/app_config_provider.dart';
+
+import '../providers/auth_provider.dart';
 import '../providers/list_provider.dart';
 
 class ToDoTab extends StatefulWidget {
@@ -62,6 +63,7 @@ class _ToDoTabState extends State<ToDoTab> {
 
   @override
   Widget build(BuildContext context) {
+    var authProvider = Provider.of<AuthhProvider>(context);
     var provider = Provider.of<AppConfigProvider>(context);
     var listProvider = Provider.of<ListProvider>(context);
     if (listProvider.taskList.isEmpty) {
@@ -76,8 +78,8 @@ class _ToDoTabState extends State<ToDoTab> {
         title: Text('Task', style: Theme.of(context).textTheme.titleLarge),
       ),
       backgroundColor: provider.isDarkMode() ? MyTheme.blueDarkColor : MyTheme.whiteColor,
-      floatingActionButton: _show
-          ? FloatingActionButton(
+      floatingActionButton: _show?
+           FloatingActionButton(
         shape: StadiumBorder(side: BorderSide(color: MyTheme.whiteColor, width: 5)),
         onPressed: () {
           AddTaskModelSheet();

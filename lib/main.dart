@@ -1,4 +1,5 @@
 import 'package:caatsec/my_theme.dart';
+import 'package:caatsec/providers/auth_provider.dart';
 import 'package:caatsec/providers/list_provider.dart';
 import 'package:caatsec/settings/settings_tab.dart';
 import 'package:caatsec/todo_tab/task_list/task_details_screen.dart';
@@ -33,8 +34,8 @@ Future<void> main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
-        create: (context) => AppConfigProvider(prefs, prefsTheme),
-      ),
+        create: (context) => AppConfigProvider(prefs, prefsTheme),////////////////////////////////
+      ),  ChangeNotifierProvider(create: (context) => AuthhProvider()),///////////
       ChangeNotifierProvider(create: (context) => ListProvider())
     ],
     child: MyApp(),

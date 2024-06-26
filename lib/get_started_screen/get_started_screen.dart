@@ -41,7 +41,7 @@ class GetStartedScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
 
                     ),
-                  backgroundColor: Colors.yellow,
+                  backgroundColor: MyTheme.yelloColor,
                 ),
                 onPressed: () {
                   Navigator.of(context)
