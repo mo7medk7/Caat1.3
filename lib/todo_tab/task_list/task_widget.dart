@@ -10,6 +10,7 @@ import '../../firebase_utils.dart'; // Adjust this as per your project structure
 import '../../model/task.dart';
 import '../../my_theme.dart';
 import '../../providers/app_config_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/list_provider.dart';
 
 class TaskWidget extends StatefulWidget {
@@ -22,36 +23,20 @@ class TaskWidget extends StatefulWidget {
 }
 
 class _TaskWidgetState extends State<TaskWidget> {
-  bool isAdmin = false; // Track admin status
 
-  @override
-  void initState() {
-    super.initState();
-    _checkAdminStatus();
-  }
 
-  Future<void> _checkAdminStatus() async {
-    // Check if current user is admin
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      DocumentSnapshot<Map<String, dynamic>> snapshot =
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-      if (snapshot.exists) {
-        setState(() {
-          isAdmin = snapshot.data()!['isAdmin'] ?? false; // Assuming 'isAdmin' is boolean in Firestore
-        });
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<AppConfigProvider>(context);
     var listProvider = Provider.of<ListProvider>(context);
+    var authProvider = Provider.of<AuthhProvider>(context);
 
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, EditTaskScreen.routeName, arguments: widget.task);
+        if (authProvider.isAdmin) {
+          Navigator.pushNamed(context, EditTaskScreen.routeName, arguments: widget.task);
+        }
       },
       child: Container(
         margin: EdgeInsets.all(12),
@@ -60,7 +45,7 @@ class _TaskWidgetState extends State<TaskWidget> {
             extentRatio: 0.30,
             motion: const ScrollMotion(),
             children: [
-              if (isAdmin) // Check if user is admin
+              if (authProvider.isAdmin) // Check if user is admin
                 SlidableAction(
                   borderRadius: BorderRadius.circular(15),
                   onPressed: (context) {
@@ -149,7 +134,8 @@ class _TaskWidgetState extends State<TaskWidget> {
   }
 
   void _deleteTask() {
-    if (isAdmin) {
+    var authProvider = Provider.of<AuthhProvider>(context,listen: false);
+    if (authProvider.isAdmin) {
       FirebaseUtils.deleteTaskFromFireStore(widget.task)
           .timeout(Duration(milliseconds: 500), onTimeout: () {
         showToastMessage("Todo deleted successfully");
