@@ -6,8 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:calendar_timeline/calendar_timeline.dart';
 
 import '../my_theme.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import '../providers/app_config_provider.dart';
 
@@ -22,44 +20,13 @@ class ToDoTab extends StatefulWidget {
 }
 
 class _ToDoTabState extends State<ToDoTab> {
-  bool _show = false;
+
 
   @override
   void initState() {
     super.initState();
-    userAdminAccess();
   }
 
-  void showFloatingButton() {
-    setState(() {
-      _show = true;
-    });
-  }
-
-  void hideFloatingButton() {
-    setState(() {
-      _show = false;
-    });
-  }
-
-  void userAdminAccess() async {
-    User? currentUser = FirebaseAuth.instance.currentUser;
-
-    if (currentUser != null) {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .get();
-
-      if (userDoc.exists && userDoc['isAdmin'] == true) {
-        showFloatingButton();
-      } else {
-        hideFloatingButton();
-      }
-    } else {
-      hideFloatingButton();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +34,7 @@ class _ToDoTabState extends State<ToDoTab> {
     var provider = Provider.of<AppConfigProvider>(context);
     var listProvider = Provider.of<ListProvider>(context);
     if (listProvider.taskList.isEmpty) {
-      listProvider.getAllTasksFromFireStore();
+      listProvider.getAllTasksFromFireStore(context);
     }
     return Scaffold(
       appBar: AppBar(
@@ -78,7 +45,7 @@ class _ToDoTabState extends State<ToDoTab> {
         title: Text('Task', style: Theme.of(context).textTheme.titleLarge),
       ),
       backgroundColor: provider.isDarkMode() ? MyTheme.blueDarkColor : MyTheme.whiteColor,
-      floatingActionButton: _show?
+      floatingActionButton:authProvider.isAdmin?
            FloatingActionButton(
         shape: StadiumBorder(side: BorderSide(color: MyTheme.whiteColor, width: 5)),
         onPressed: () {
@@ -94,7 +61,7 @@ class _ToDoTabState extends State<ToDoTab> {
             firstDate: DateTime.now().subtract(Duration(days: 365)),
             lastDate: DateTime.now().add(Duration(days: 365)),
             onDateSelected: (date) {
-              listProvider.setNewSelectedDate(date);
+              listProvider.setNewSelectedDate(date,context);
             },
             leftMargin: 20,
             monthColor: provider.isDarkMode() ? MyTheme.whiteColor : MyTheme.blackColor,

@@ -153,7 +153,7 @@ class _TaskWidgetState extends State<TaskWidget> {
       FirebaseUtils.deleteTaskFromFireStore(widget.task)
           .timeout(Duration(milliseconds: 500), onTimeout: () {
         showToastMessage("Todo deleted successfully");
-        Provider.of<ListProvider>(context, listen: false).getAllTasksFromFireStore();
+        Provider.of<ListProvider>(context, listen: false).getAllTasksFromFireStore(context);
       });
     } else {
       showToastMessage("Only admin can delete tasks");

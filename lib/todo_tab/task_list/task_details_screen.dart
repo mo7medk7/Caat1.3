@@ -190,7 +190,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         });
       }).timeout(Duration(milliseconds: 500), onTimeout: () {
         print("todo edited successfully");
-        Listprovider.getAllTasksFromFireStore();
+        Listprovider.getAllTasksFromFireStore(context);
         Navigator.pop(context);
     }
    );

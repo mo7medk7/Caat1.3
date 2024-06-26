@@ -2,9 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import '../../dialog_utlis.dart';
 import '../../firebase_utils.dart';
-import '../../home_tab/home_screen.dart';
 import '../../model/task.dart';
 import '../../my_theme.dart';
 import '../../providers/app_config_provider.dart';
@@ -183,7 +181,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
       FirebaseUtils.addTaskToFirebase(task).timeout(Duration(milliseconds: 500),
           onTimeout: () {
         print('todo added successfully');
-        Listprovider.getAllTasksFromFireStore();
+        Listprovider.getAllTasksFromFireStore(context);
         Navigator.pop(context);
         showToastMessage("todo added successfully");
       });
