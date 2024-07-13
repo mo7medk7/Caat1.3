@@ -1,7 +1,8 @@
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class AnalysisPage extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
   Future<void> fetchFilesFromStorage() async {
     String? nextPageToken; // Initialize nextPageToken as nullable
     try {
-      Reference storageRef = FirebaseStorage.instance.ref();
+      Reference storageRef = FirebaseStorage.instance.ref().child('reports');
 
       do {
         final listResult = await storageRef.list(ListOptions(
@@ -47,7 +48,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
         builder: (context) {
           return AlertDialog(
             title: Text('Error'),
-            content: Text('You do not have permission to access the files.'),
+            content: Text('Failed to fetch files: $e'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -59,21 +60,6 @@ class _AnalysisPageState extends State<AnalysisPage> {
           );
         },
       );
-    }
-  }
-
-  // Function to open the file URL
-  Future<void> openFileUrl(String url) async {
-    if (await canLaunch(url)) {
-      if (kIsWeb) {
-        // Use url_launcher_web for web platforms
-        launch(url, forceSafariVC: false);
-      } else {
-        // Fallback to url_launcher for other platforms
-        launch(url);
-      }
-    } else {
-      throw 'Could not launch $url';
     }
   }
 
@@ -95,12 +81,46 @@ class _AnalysisPageState extends State<AnalysisPage> {
               leading: Icon(Icons.insert_drive_file),
               title: Text(fileNames[index]),
               onTap: () {
-                // Open the file URL when tapped
-                openFileUrl(fileUrls[index]);
+                // Open the HTML file in a WebView
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HtmlDisplayPage(
+                      htmlFileUrl: fileUrls[index],
+                    ),
+                  ),
+                );
               },
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class HtmlDisplayPage extends StatelessWidget {
+  final String htmlFileUrl;
+
+  const HtmlDisplayPage({Key? key, required this.htmlFileUrl}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('HTML File'),
+      ),
+      body: InAppWebView(
+        initialUrlRequest: URLRequest(url: WebUri(htmlFileUrl)),
+        initialOptions: InAppWebViewGroupOptions(
+          crossPlatform: InAppWebViewOptions(
+            useShouldOverrideUrlLoading: true,
+            useOnDownloadStart: true,
+          ),
+          android: AndroidInAppWebViewOptions(
+            useHybridComposition: true,
+          ),
+        ),
       ),
     );
   }

@@ -2,9 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:caatsec/group_chat/chat_service.dart'; // تعديل المسار ليعكس موقع chat_service.dart
 
 final _fireStore = FirebaseFirestore.instance;
-late User singnedInUser;
+late User signedInUser;
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _authFirebase = FirebaseAuth.instance;
+  final ChatService _chatService = ChatService(); // تهيئة ChatService
 
   String? messageText;
 
@@ -29,121 +31,38 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       final user = _authFirebase.currentUser;
       if (user != null) {
-        singnedInUser = user;
+        signedInUser = user;
       }
     } catch (e) {
       print(e);
     }
   }
 
-  // void getMessage() async {
-  //   final messages = await _fireStore.collection('messages').get();
-  //   for (var message in messages.docs) {
-  //     print(message.data());
-  //   }
-  // }
-
-  // void messagesStreams() async {
-  //   await for (var snapshot in _fireStore.collection('messages').snapshots()) {
-  //     for (var message in snapshot.docs) {
-  //       print(message.data());
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.blue[900],
-          title: Row(
-            children: [
-              //Image.asset('assets/images/messages.png', height: 25),
-              SizedBox(width: 10),
-              Text(
-                'Chat Room',
-                style: TextStyle(color: Colors.white),
-              )
-            ],
-          ),
-          actions: [
-            // IconButton(
-            //   onPressed: () {
-            //     messagesStreams();
-            //   },
-            //   icon: Icon(Icons.download),
-            // )
-          ]),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        backgroundColor: Colors.blue[900],
+        title: Row(
           children: [
-            MessagesStreamBuilder(),
-            Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: Colors.blue,
-                    width: 2,
-                  ),
-                ),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: messageTextController,
-                      onChanged: (value) {
-                        messageText = value;
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 20,
-                        ),
-                        hintText: 'Write your message here...',
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      messageTextController.clear();
-                      _fireStore.collection("messages").add({
-                        "text": messageText,
-                        "email": singnedInUser.email,
-                        "time": FieldValue.serverTimestamp(),
-                      });
-                    },
-                    child: Text(
-                      'send',
-                      style: TextStyle(
-                        color: Colors.blue[800],
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  )
-                ],
-              ),
+            SizedBox(width: 10),
+            Text(
+              'Chat Room',
+              style: TextStyle(color: Colors.white),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class MessagesStreamBuilder extends StatelessWidget {
-  @override
-
-  Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: _fireStore.collection("messages").orderBy("time").snapshots(),
-        builder: ((context, snapshot) {
-          List<MessageLine> messageWitgets = [];
+      body: SafeArea(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+        StreamBuilder<QuerySnapshot>(
+        stream:
+        _fireStore.collection("messages").orderBy("time").snapshots(),
+        builder: (context, snapshot) {
+          List<MessageLine> messageWidgets = [];
           if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(
@@ -153,25 +72,85 @@ class MessagesStreamBuilder extends StatelessWidget {
           }
           final messages = snapshot.data!.docs.reversed;
           for (var message in messages) {
-            final messageText = message.get('text');
-            final messageEmail = message.get('email');
-            final currentUser = singnedInUser.email;
+            final messageData = message.data() as Map<String, dynamic>;
+            final messageText = messageData['text'] as String?;
+            final messageEmail = messageData['email'] as String?;
 
-            final messageWitget = MessageLine(
-              email: messageEmail,
-              text: messageText,
-              isMe: currentUser == messageEmail,
-            );
-            messageWitgets.add(messageWitget);
+            if (messageText != null && messageEmail != null) {
+              final currentUser = signedInUser.email;
+              final messageWidget = MessageLine(
+                email: messageEmail,
+                text: messageText,
+                isMe: currentUser == messageEmail,
+              );
+              messageWidgets.add(messageWidget);
+            }
           }
           return Expanded(
             child: ListView(
               reverse: true,
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-              children: messageWitgets,
+              children: messageWidgets,
             ),
           );
-        }));
+        },
+      ),
+      Container(
+      decoration: BoxDecoration(
+      border: Border(
+      top: BorderSide(
+      color: Colors.blue,
+      width: 2,
+    ),
+    ),
+    ),
+    child: Row(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+    Expanded(
+    child: TextField(
+    controller: messageTextController,
+    onChanged: (value) {
+    messageText = value;
+    },
+    decoration: InputDecoration(
+    contentPadding: EdgeInsets.symmetric(
+    vertical: 10,
+    horizontal: 20,
+    ),
+    hintText: 'Write your message here...',
+    border: InputBorder.none,
+    ),
+    ),
+    ),
+      TextButton(
+        onPressed: () {
+          messageTextController.clear();
+          _fireStore.collection("messages").add({
+            "text": messageText,
+            "email": signedInUser.email,
+            "time": FieldValue.serverTimestamp(),
+          });
+          // إرسال الإشعار باستخدام خدمة ChatService
+          _chatService.sendNotification(
+              messageText!, signedInUser.uid);
+        },
+        child: Text(
+          'send',
+          style: TextStyle(
+            color: Colors.blue[800],
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+      )
+    ],
+    ),
+      ),
+            ],
+        ),
+      ),
+    );
   }
 }
 
